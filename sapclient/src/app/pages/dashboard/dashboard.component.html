@@ -2,11 +2,12 @@
 <h2 style="text-align: center">Sistema de Apoio a Projetos</h2>
 
 
-<p-panel [toggleable]="true" [collapsed]="true" >
+<p-panel [toggleable]="true" [collapsed]="true">
   <p-header id="titleHeader">Filtros</p-header>
 
-  <div id="filtros">
-      <div class="ui-g-4 ui-md-4 ui-sm-12 dashboardFiltro">
+  <div id="filtros" class="ui-fluid p-formgrid p-grid">
+
+      <div class="ui-g-4 ui-md-4 ui-sm-12  dashboardFiltro">
         <span class="ui-float-label">
             <p-multiSelect class="filtro" maxSelectedLabels="4"
                 [options]="listaClientes" defaultLabel="&nbsp;"
@@ -45,24 +46,26 @@
 
 </p-panel>
 
-<p-fieldset (onBeforeToggle)="obterOsPorProjeto(projeto)"    *ngFor="let projeto of projetosFiltrados" [toggleable]="true "
+<p-fieldset (onBeforeToggle)="obterOsPorProjeto(projeto)"  *ngFor="let projeto of projetosFiltrados" [toggleable]="true "
 [collapsed]="true">
 
   <p-header>{{projeto.nome | uppercase}}</p-header>
   <div>
     <p-panel >
       <ul id="DescricaoProjeto">
-        <li><span>Lider:</span> {{obterNomeLider(projeto.idLider) | uppercase}}</li>
-        <li><span>Testador:</span> {{obterNomeTestador(projeto.id) | uppercase}}</li>
-        <li><span>Revisor:</span> {{obterNomeRevisor(projeto.id) | uppercase}}</li>
-        <li><span>Gerente:</span> {{obterNomeGerente(projeto.id) | uppercase}}</li>
+          <div class="ui-fluid p-formgrid p-grid">
+            <li class="ui-g-3 ui-md-5 ui-sm-12"><span>Lider:</span> {{obterNomeLider(projeto.idLider) | uppercase}}</li>
+            <li class="ui-g-3 ui-md-5 ui-sm-12"><span>Testador:</span> {{obterNomeTestador(projeto.id) | uppercase}}</li>
+            <li class="ui-g-3 ui-md-5 ui-sm-12"><span>Revisor:</span> {{obterNomeRevisor(projeto.id) | uppercase}}</li>
+            <li class="ui-g-3 ui-md-5 ui-sm-12"><span>Gerente:</span> {{obterNomeGerente(projeto.id) | uppercase}}</li>
+          </div>
       </ul>
     </p-panel>
 
   </div>
 
 
-  <p-table #dt [value]="projeto.listaOs" [paginator]="true" [rows]="4" [response]="true" [columns]="colunas" dataKey="nome">
+  <p-table #dt [value]="projeto.listaOs" [paginator]="true" [rows]="4" [responsive]="true" [columns]="colunas" dataKey="nome">
 
     <!-- <pre>{{ projeto.listaOs | json }}</pre> -->
 
@@ -90,6 +93,17 @@
             </ng-template>
             <ng-template  pTemplate="output">
             {{ ordemservico.nome | uppercase}}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+
+        <td pEditableColumn>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <input pInputText type="text" [(ngModel)]="ordemservico.chave">
+            </ng-template>
+            <ng-template  pTemplate="output">
+            {{ ordemservico.chave | uppercase}}
             </ng-template>
           </p-cellEditor>
         </td>
@@ -170,16 +184,16 @@
       <tr>
         <td [attr.colspan]="columns.length + 1">
           <div class="p-grid -fluid" style="font-size:16px;padding:5px 5px 20px 5px;">
-            <p-table paginator="true" [rows]="10" [columns]="coluna" [value]="sprints" dataKey="nome">
+            <p-table [responsive]="true" paginator="true" [rows]="10" [columns]="coluna" [value]="sprints" dataKey="nome">
               <ng-template pTemplate="header" let-subcolumns>
       <tr>
-        <th [class.action]="coluna.header == 'Ações'" *ngFor="let coluna of colunaSprint" pResizableColumn>
+        <th [class.action]="coluna.header == 'Ações'" *ngFor="let coluna of colunaSprint"   pResizableColumn  >
           {{coluna.header}}
         </th>
       </tr>
     </ng-template>
 
-    <ng-template pTemplate="body" let-sprints let-expanded="expanded">
+    <ng-template pTemplate="body" let-sprints let-expanded="expanded" >
       <tr *ngIf="sprints.idOrdemServico == ordemservico.id">
 
         <td pEditableColumn>
@@ -229,16 +243,32 @@
         <td pEditableColumn>
           <p-cellEditor>
             <ng-template pTemplate="input">
-<<<<<<< HEAD
-              <p-dropdown class="dropdownDash" (onChange)="habilitarBotao($event, sprints)" [options]="simNaoDropDown" [(ngModel)]="sprints.impedimento"></p-dropdown>
-=======
               <p-dropdown (onChange)="habilitarBotao($event, sprints)" [options]="simNaoDropDown"  [(ngModel)]="sprints.impedimento" style="width:400px;" ></p-dropdown>
->>>>>>> 9040e238567e24ef0ea761b2ecfd55b6bd7fa319
             </ng-template>
             <ng-template pTemplate="output">
               {{ obterSimNao(sprints.impedimento) }}
             </ng-template>
           </p-cellEditor>
+        </td>
+
+        <td pEditableColumn>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <p-dialog header="Descrição da Sprint" [(visible)]="display" [position]="position"  [style]="{width: '50vw'}" [maximizable]="true" [(ngModel)]="sprints.descricao" >
+              <p>
+                    <textarea type="text" pInputText [(ngModel)]="sprints.descricao" style="width: 100%;"></textarea>
+              </p>
+                  <p-footer>
+                      <button type="button" pButton icon="pi pi-check" (click)="showDialog()" label="Yes"></button>
+                      <button type="button" pButton icon="pi pi-times" (click)="showDialog()" label="No" class="ui-button-secondary"></button>
+                  </p-footer>
+          </p-dialog>
+            </ng-template>
+            <ng-template pTemplate="output">
+            </ng-template>
+          </p-cellEditor>
+          <button (click)="showDialog()" pButton icon="pi pi-info-circle" label="Info"></button>
+
         </td>
 
         <td pEditableColumn>
@@ -262,8 +292,9 @@
             </ng-template>
           </p-cellEditor>
         </td>
+
         <td>
-          <button pButton icon="ui-icon-check-circle" label="Salvar" (click)="enviarFormSprint(sprints)"></button>
+          <button pButton id="botaoSalvar" icon="ui-icon-check-circle" label="Salvar" (click)="enviarFormSprint(sprints)"></button>
         </td>
 
       </tr>

@@ -10,10 +10,11 @@
       [rowsPerPageOptions]="[5, 10, 20]">
       <ng-template pTemplate="header" let-columns>
         <tr>
-          <th [class.action]="coluna.header == 'Ações'" *ngFor="let coluna of columns">
+          <th [class.action]="coluna.header == 'Aï¿½ï¿½es'" *ngFor="let coluna of columns">
             {{ coluna.header }}
           </th>
         </tr>
+
         <tr>
           <th *ngFor="let coluna of columns" [ngSwitch]="coluna.field">
             <input *ngSwitchCase="'nome'" pInputText type="text"
